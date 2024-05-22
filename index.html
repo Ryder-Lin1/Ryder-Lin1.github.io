@@ -1,19 +1,58 @@
-<html>
- <head>
-  <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-MM3RZ525B7"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>My Website</title>
+    <link rel="stylesheet" href="./style.css">
+    <link rel="icon" href="./favicon.ico" type="image/x-icon">
+  </head>
+  <body>
+    <main>
+      <h1>Welcome to My Website where there is a daily puzzle and chess bot</h1>
+      <div class="widget-container">
+        <div id="csoDpCon"></div>
+        <div id="csoPvcCon"></div>
+      </div>
+    </main>
+    <script type="text/javascript" src="https://www.chessstrategyonline.com/js/widgets.min.js"></script>
+    <script type="text/javascript">
+      csoDailyPuzzle({
+        boardStyle: "default",
+        pieceStyle: "uscf",
+        showCoordinates: true,
+        width: 400,
+      });
+    </script>
+    <script type="text/javascript">
+      csoPlayVsComputer({
+        boardStyle: "default",
+        pieceStyle: "uscf",
+        showCoordinates: true,
+        width: 400,
+      });
+    </script>
 
-  gtag('config', 'G-MM3RZ525B7');
-</script>
-<script src="https://cdn.jsdelivr.net/npm/p5@1.6.0/lib/p5.js"></script>
- <script src="sketch.js"></script>
- </head>
- <body>
- <main>
- </main>
- </body>
+    <h1> top two greatest chess players </h1>
+    
+    <div class = "text" style="display:block;text-align:left">
+        <img align="left" src="bbf.jpg" alt="Flowers in Chania"> 
+
+        <h1>Robert James Fischer was an American chess grandmaster and the eleventh World Chess Champion. A chess prodigy, he won his first of a record eight US Championships at the age of 14. In 1964, he won with an 11–0 score, the only perfect score in the history of the tournament.   </h1> 
+        <a href="https://www.w3schools.com" style = "font-size: 20px;">bobby fisher wikipedia if you want more  information</a>
+<br><br><br><br><br><br><br><br><br><br><br><br>
+	
+    </div>
+
+    <div class = "text1" style="display:block;text-align:left">
+        <img align="left" src="mc.jpg" alt="Flowers in Chania"> 
+      
+
+
+        <h1>Sven Magnus Øen Carlsen is a Norwegian chess grandmaster. He is a five-time World Chess Champion, the reigning five-time World Rapid Chess Champion, the reigning seven-time World Blitz Chess Champion, and the reigning Chess World Cup Champion.</h1>
+  <a href="https://www.chess.com/players/magnus-carlsen" style = "font-size: 20px;">magnus carlsen chess profile</a>
+    </div>
+    
+
+  </body>
 </html>
