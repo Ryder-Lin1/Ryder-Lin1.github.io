@@ -1,165 +1,183 @@
+let xDirectionArray = [1, 0, -1, 0];
+let yDirectionArray = [0, 1, 0, -1];
+let directionIndex = 0;
+//caterpillar section locations
+let cX = [];
+let cY = [];
+let len = 3;
+let diameter = 10;
 
-// the snake is divided into small segments, which are drawn and edited on each 'draw' call
-let numSegments = 10;
-let direction = 'right';
+function keyPressed() {
+ if (keyCode === RIGHT_ARROW && directionIndex != 2) {
+ directionIndex = 0;
+ movement = true;
+ }
+ if (keyCode === LEFT_ARROW && directionIndex != 0) {
+ directionIndex = 2;
+ }
+ if (keyCode === UP_ARROW && directionIndex != 1) {
+ directionIndex = 3;
+ movement = true;
+ }
+ if (keyCode === DOWN_ARROW && directionIndex != 3) {
+ directionIndex = 1;
+ movement = true;
+ }
+  function plotFood(){
+ foodX=round(random(5,400))
+ foodX-=foodX%10
+ foodX+=5
 
-const xStart = 0; //starting x coordinate for snake
-const yStart = 250; //starting y coordinate for snake
-const diff = 10;
+ foodY=round(random(5,400))
+ foodY-=foodY%10
+ foodY+=5
+}
 
-let xCor = [];
-let yCor = [];
+}
+function strt() {
+ loop();
+ song.play();
+}
+function caterpillar() {
+ if (cX[0] == foodX && cY[0] == foodY) {
+ plotFood();
+ len += 1;
+   bell.play()
+ }
+ for (let i = len - 1; i > 0; i--) {
+ cX[i] = cX[i - 1];
+ cY[i] = cY[i - 1];
+ }
+ cX[0] += xDirectionArray[directionIndex] * 10;
+ cY[0] += yDirectionArray[directionIndex] * 10;
+ for (let i = 0; i < len; i++) {
+ fill("green");
+ cX[i] = constrain(cX[i], 5, 400 - 5);
+ cY[i] = constrain(cY[i], 5, 400 - 5);
+ circle(cX[i], cY[i], diameter);
+ }
 
-let xFruit = 0;
-let yFruit = 0;
-let scoreElem;
 
+ 
+
+}
 function setup() {
-  scoreElem = createDiv('Score = 0');
-  scoreElem.position(20, 20);
-  scoreElem.id = 'score';
-  scoreElem.style('color', 'white');
+  noLoop()
+   song = loadSound("smb.mp3");
+ bell = loadSound("smb_powerup.mp3");
+ frameRate(10);
+ cX[0] = 35;
+ cY[0] = 15;
+ cX[1] = 25;
+ cY[1] = 15;
+ cX[2] = 15;
+ cY[2] = 15;
+   plotFood()
+  
+ createCanvas(400, 400);
+  //start button
+ button = createButton("start!");
+ button.mouseClicked(strt);
+ button.size(120, 50);
+ button.position(10, 420);
+ button.style("font-family", "Comic Sans MS");
+ button.style("font-size", "28px");
+ //up button
+ //let a=String.fromCharCode(11013)
+ button = createButton("U");
+ button.mouseClicked(upButton);
+ button.size(80, 50);
+ button.position(230, 420);
+ button.style("font-family", "Comic Sans MS");
+ button.style("font-size", "28px");
+ //down button
+ button = createButton("D");
+ button.mouseClicked(downButton);
+ button.size(80, 50);
+ button.position(230, 520);
+ button.style("font-family", "Comic Sans MS");
+ button.style("font-size", "28px");
+ //left button
+ button = createButton("L");
+ button.mouseClicked(leftButton);
+ button.size(80, 50);
+ button.position(150, 470);
+ button.style("font-family", "Comic Sans MS");
+ button.style("font-size", "28px");
+ //right button
+ button = createButton("R");
+ button.mouseClicked(rightButton);
+ button.size(80, 50);
+ button.position(310, 470);
+ button.style("font-family", "Comic Sans MS");
+ button.style("font-size", "28px");
 
-  createCanvas(500, 500);
-  frameRate(15);
-  stroke(255);
-  strokeWeight(10);
-  updateFruitCoordinates();
-
-  for (let i = 0; i < numSegments; i++) {
-    xCor.push(xStart + i * diff);
-    yCor.push(yStart);
-  }
 }
 
 function draw() {
-  background(0);
-  for (let i = 0; i < numSegments - 1; i++) {
-    line(xCor[i], yCor[i], xCor[i + 1], yCor[i + 1]);
-  }
-  updateSnakeCoordinates();
-  checkGameStatus();
-  checkForFruit();
+ background("black");
+caterpillar();
+ fill("red");
+  
+
+  
+  circle(foodX, foodY, 10)
+  crossOver()
+
+   
+
+  
 }
-
-/*
- The segments are updated based on the direction of the snake.
- All segments from 0 to n-1 are just copied over to 1 till n, i.e. segment 0
- gets the value of segment 1, segment 1 gets the value of segment 2, and so on,
- and this results in the movement of the snake.
-
- The last segment is added based on the direction in which the snake is going,
- if it's going left or right, the last segment's x coordinate is increased by a
- predefined value 'diff' than its second to last segment. And if it's going up
- or down, the segment's y coordinate is affected.
-*/
-function updateSnakeCoordinates() {
-  for (let i = 0; i < numSegments - 1; i++) {
-    xCor[i] = xCor[i + 1];
-    yCor[i] = yCor[i + 1];
-  }
-  switch (direction) {
-    case 'right':
-      xCor[numSegments - 1] = xCor[numSegments - 2] + diff;
-      yCor[numSegments - 1] = yCor[numSegments - 2];
-      break;
-    case 'up':
-      xCor[numSegments - 1] = xCor[numSegments - 2];
-      yCor[numSegments - 1] = yCor[numSegments - 2] - diff;
-      break;
-    case 'left':
-      xCor[numSegments - 1] = xCor[numSegments - 2] - diff;
-      yCor[numSegments - 1] = yCor[numSegments - 2];
-      break;
-    case 'down':
-      xCor[numSegments - 1] = xCor[numSegments - 2];
-      yCor[numSegments - 1] = yCor[numSegments - 2] + diff;
-      break;
-  }
+function rightButton() {
+ if (directionIndex != 2) {
+ directionIndex = 0;
+ }
 }
-
-/*
- I always check the snake's head position xCor[xCor.length - 1] and
- yCor[yCor.length - 1] to see if it touches the game's boundaries
- or if the snake hits itself.
-*/
-function checkGameStatus() {
-  if (
-    xCor[xCor.length - 1] > width ||
-    xCor[xCor.length - 1] < 0 ||
-    yCor[yCor.length - 1] > height ||
-    yCor[yCor.length - 1] < 0 ||
-    checkSnakeCollision()
-  ) {
-    noLoop();
-    const scoreVal = parseInt(scoreElem.html().substring(8));
-    scoreElem.html('Game ended! Your score was : ' + scoreVal);
-  }
+function leftButton() {
+ if (directionIndex != 0) {
+ directionIndex = 2;
+ }
 }
-
-/*
- If the snake hits itself, that means the snake head's (x,y) coordinate
- has to be the same as one of its own segment's (x,y) coordinate.
-*/
-function checkSnakeCollision() {
-  const snakeHeadX = xCor[xCor.length - 1];
-  const snakeHeadY = yCor[yCor.length - 1];
-  for (let i = 0; i < xCor.length - 1; i++) {
-    if (xCor[i] === snakeHeadX && yCor[i] === snakeHeadY) {
-      return true;
-    }
-  }
+function upButton() {
+ if (directionIndex != 1) {
+ directionIndex = 3;
+ }
 }
-
-/*
- Whenever the snake consumes a fruit, I increment the number of segments,
- and just insert the tail segment again at the start of the array (basically
- I add the last segment again at the tail, thereby extending the tail)
-*/
-function checkForFruit() {
-  point(xFruit, yFruit);
-  if (xCor[xCor.length - 1] === xFruit && yCor[yCor.length - 1] === yFruit) {
-    const prevScore = parseInt(scoreElem.html().substring(8));
-    scoreElem.html('Score = ' + (prevScore + 1));
-    xCor.unshift(xCor[0]);
-    yCor.unshift(yCor[0]);
-    numSegments++;
-    updateFruitCoordinates();
-  }
+function downButton() {
+ if (directionIndex != 3) {
+ directionIndex = 1;
+ }
 }
+function plotFood() {
+ let success = false;
+ while (!success) {
+ foodX = round(random(5, 399));
+ foodX -= foodX % 10;
+ foodX += 5;
+ foodY = round(random(5, 401));
+ foodY -= foodY % 10;
+ foodY += 5;
+ for (let i = 0; i < len; i++) {
+ if (cX[i] == foodX && cY[i] == foodY) {
+ success = false;
+ break;
+ } //if
 
-function updateFruitCoordinates() {
-  /*
-    The complex math logic is because I wanted the point to lie
-    in between 100 and width-100, and be rounded off to the nearest
-    number divisible by 10, since I move the snake in multiples of 10.
-  */
-
-  xFruit = floor(random(10, (width - 100) / 10)) * 10;
-  yFruit = floor(random(10, (height - 100) / 10)) * 10;
-}
-
-function keyPressed() {
-  switch (keyCode) {
-    case 74:
-      if (direction !== 'right') {
-        direction = 'left';
-      }
-      break;
-    case 76:
-      if (direction !== 'left') {
-        direction = 'right';
-      }
-      break;
-    case 73:
-      if (direction !== 'down') {
-        direction = 'up';
-      }
-      break;
-    case 75:
-      if (direction !== 'up') {
-        direction = 'down';
-      }
-      break;
-  }
-}
+ //will cause while loop to stop
+ if (i == len - 1) {
+ success = true;
+ }//if
+ } //for i
+ } //while
+}//plotFood
+  function crossOver() {
+ //note that I have ensured that if you are on the edge you’re still ok
+ if (cX[0] > 5 && cX[0] < 395 && cY[0] >5 && cY[0] < 395 && len > 1) {
+ for (let i = 1; i < len; i++) {
+ if (cX[0] == cX[i] && cY[0] == cY[i]) {
+ console.log("success");
+ noLoop();
+ }
+ }
+ } //edge if
+} //crossover
